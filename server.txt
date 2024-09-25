@@ -1,0 +1,37 @@
+import socket
+
+# Function to start the server
+def start_server():
+    # Create a socket object
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+    # Bind the socket to a public host and port
+    host = '127.0.0.1'  # Localhost
+    port = 12345  # Arbitrary non-privileged port
+    server_socket.bind((host, port))
+    
+    # Listen for incoming connections
+    server_socket.listen(1)
+    print(f"Server listening on {host}:{port}...")
+    
+    # Accept a connection
+    conn, addr = server_socket.accept()
+    print(f"Connection established with {addr}")
+    
+    # Chat loop
+    while True:
+        # Receive message from client
+        client_message = conn.recv(1024).decode()
+        if not client_message:
+            break
+        print(f"Client: {client_message}")
+        
+        # Send a response
+        server_message = input("You (Server): ")
+        conn.send(server_message.encode())
+
+    # Close the connection
+    conn.close()
+
+if __name__ == "__main__":
+    start_server()
